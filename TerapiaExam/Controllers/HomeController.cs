@@ -1,13 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TerapiaExam.Data;
+using TerapiaExam.ViewModels;
 
 namespace TerapiaExam.Controllers
 {
     public class HomeController : Controller
     {
-       
-        public IActionResult Index()
+        private readonly AppDbContext _context;
+
+        public HomeController(AppDbContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            HomeVM vm = new()
+            {
+                Employees = await _context.Employees.ToListAsync()
+            };
+            return View(vm);
         }
 
     }

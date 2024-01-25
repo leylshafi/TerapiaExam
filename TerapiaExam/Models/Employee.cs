@@ -8,5 +8,9 @@ namespace TerapiaExam.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Job { get; set; }
+        public string? FacebookLink { get; set; }
+        public string? TwitterLink { get; set; }
+        public string? InstagramLink { get; set; }
+        public string? LinkedinLink { get; set; }
     }
 }

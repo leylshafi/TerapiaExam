@@ -3,4 +3,24 @@
     <img src="~/assets/img/@Model.ImageUrl" style="width:200px;"/>
     <h1>@Model.Name @Model.Surname</h1>
     <h5>@Model.Job</h5>
+    @if (Model.InstagramLink != null){
+        <p>Instagram</p>
+        <a href="@Model.InstagramLink">@Model.InstagramLink</a>
+    }
+    @if (Model.FacebookLink != null)
+    {
+        <p>Facebook</p>
+        <a href="@Model.FacebookLink">@Model.FacebookLink</a>
+    }
+    @if (Model.LinkedinLink != null)
+    {
+        <p>Linkedin</p>
+        <a href="@Model.LinkedinLink">@Model.LinkedinLink</a>
+    }
+    @if (Model.TwitterLink != null)
+    {
+        <p>Twitter</p>
+        <a href="@Model.TwitterLink">@Model.TwitterLink</a>
+    }
+
 </div>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TerapiaExam.Areas.Admin.ViewModels;
 using TerapiaExam.Data;
@@ -8,6 +9,7 @@ using TerapiaExam.Utilities.Extentions;
 namespace TerapiaExam.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly AppDbContext _context;
@@ -19,10 +21,10 @@ namespace TerapiaExam.Areas.Admin.Controllers
             _env = env;
         }
 
-        public async Task<IActionResult> Index(int page, int take=2)
+        public async Task<IActionResult> Index(int page, int take = 2)
         {
             double count = await _context.Employees.CountAsync();
-            var employees = await _context.Employees.Skip(page*take).Take(take).ToListAsync();
+            var employees = await _context.Employees.Skip(page * take).Take(take).ToListAsync();
             PaginationVM<Employee> vm = new()
             {
                 CurrentPage = page,
@@ -38,7 +40,7 @@ namespace TerapiaExam.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>Create(CreateEmployeeVM employeeVM)
+        public async Task<IActionResult> Create(CreateEmployeeVM employeeVM)
         {
             if (!ModelState.IsValid) return View();
             if (!employeeVM.Photo.ValidateType())
@@ -57,14 +59,18 @@ namespace TerapiaExam.Areas.Admin.Controllers
                 Name = employeeVM.Name,
                 Surname = employeeVM.Surname,
                 Job = employeeVM.Job,
-                ImageUrl = await employeeVM.Photo.CreateFileAsync(_env.WebRootPath, "assets", "img")
+                ImageUrl = await employeeVM.Photo.CreateFileAsync(_env.WebRootPath, "assets", "img"),
+                FacebookLink = employeeVM.FacebookLink,
+                InstagramLink = employeeVM.InstagramLink,
+                LinkedinLink = employeeVM.LinkedinLink,
+                TwitterLink = employeeVM.TwitterLink
             };
             await _context.Employees.AddAsync(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult>Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) return BadRequest();
             var existed = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
@@ -74,19 +80,23 @@ namespace TerapiaExam.Areas.Admin.Controllers
                 Name = existed.Name,
                 Surname = existed.Surname,
                 Job = existed.Job,
-                ImageUrl = existed.ImageUrl
+                ImageUrl = existed.ImageUrl,
+                FacebookLink = existed.FacebookLink,
+                InstagramLink = existed.InstagramLink,
+                LinkedinLink = existed.LinkedinLink,
+                TwitterLink = existed.TwitterLink
             };
             return View(vm);
         }
         [HttpPost]
-        public async Task<IActionResult>Update(int id, UpdateEmployeeVM employeeVM)
+        public async Task<IActionResult> Update(int id, UpdateEmployeeVM employeeVM)
         {
             if (id <= 0) return BadRequest();
             var existed = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
             if (existed is null) return NotFound();
             employeeVM.ImageUrl = existed.ImageUrl;
             if (!ModelState.IsValid) return View(employeeVM);
-            if(employeeVM.Photo is not null)
+            if (employeeVM.Photo is not null)
             {
                 if (!employeeVM.Photo.ValidateType())
                 {
@@ -104,19 +114,23 @@ namespace TerapiaExam.Areas.Admin.Controllers
             existed.Name = employeeVM.Name;
             existed.Surname = employeeVM.Surname;
             existed.Job = employeeVM.Job;
+            existed.FacebookLink = employeeVM.FacebookLink;
+            existed.InstagramLink = employeeVM.InstagramLink;
+            existed.LinkedinLink = employeeVM.LinkedinLink;
+            existed.TwitterLink = employeeVM.TwitterLink;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult>Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id <= 0) return BadRequest();
             var existed = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
             if (existed is null) return NotFound();
             return View(existed);
         }
-
-        public async Task<IActionResult>Delete(int id)
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest();
             var existed = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
