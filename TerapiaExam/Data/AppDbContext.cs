@@ -14,6 +14,7 @@ namespace TerapiaExam.Data
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<Position> Positions { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

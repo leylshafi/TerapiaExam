@@ -13,7 +13,7 @@
                             <th>No</th>
                             <th>Image</th>
                             <th>Fullname</th>
-                            <th>Job</th>
+                            <th>Position</th>
                             <th>Settings</th>
                         </tr>
                     </thead>
@@ -26,7 +26,7 @@
                                     <img src="~/assets/img/@employee.ImageUrl" />
                                 </td>
                                 <td>@employee.Name @employee.Surname</td>
-                                <td>@employee.Job </td>
+                                <td>@employee.Position.Name </td>
                                 <td>
                                     <a class="btn btn-success" asp-action="Update" asp-route-id="@employee.Id">Update</a>
                                     @if (User.IsInRole("Admin"))

@@ -24,7 +24,7 @@ namespace TerapiaExam.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int page, int take = 2)
         {
             double count = await _context.Employees.CountAsync();
-            var employees = await _context.Employees.Skip(page * take).Take(take).ToListAsync();
+            var employees = await _context.Employees.Include(e => e.Position).Skip(page * take).Take(take).ToListAsync();
             PaginationVM<Employee> vm = new()
             {
                 CurrentPage = page,
@@ -34,31 +34,47 @@ namespace TerapiaExam.Areas.Admin.Controllers
             return View(vm);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            CreateEmployeeVM vm = new()
+            {
+                Positions = await _context.Positions.ToListAsync()
+            };
+            return View(vm);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateEmployeeVM employeeVM)
         {
-            if (!ModelState.IsValid) return View();
+            if (!ModelState.IsValid)
+            {
+                employeeVM.Positions = await _context.Positions.ToListAsync();
+                return View(employeeVM);
+            }
+            if (!await _context.Positions.AnyAsync(p => p.Id == employeeVM.PositionId))
+            {
+                employeeVM.Positions = await _context.Positions.ToListAsync();
+                ModelState.AddModelError("PositionId", "There is no such position");
+                return View(employeeVM);
+            }
             if (!employeeVM.Photo.ValidateType())
             {
+                employeeVM.Positions = await _context.Positions.ToListAsync();
                 ModelState.AddModelError("Photo", "Incorrect file type");
-                return View();
+                return View(employeeVM);
             }
             if (!employeeVM.Photo.ValidateSize())
             {
+                employeeVM.Positions = await _context.Positions.ToListAsync();
                 ModelState.AddModelError("Photo", "Incorrect file size");
-                return View();
+                return View(employeeVM);
             }
 
             Employee employee = new()
             {
                 Name = employeeVM.Name,
                 Surname = employeeVM.Surname,
-                Job = employeeVM.Job,
+                PositionId = employeeVM.PositionId,
                 ImageUrl = await employeeVM.Photo.CreateFileAsync(_env.WebRootPath, "assets", "img"),
                 FacebookLink = employeeVM.FacebookLink,
                 InstagramLink = employeeVM.InstagramLink,
@@ -79,12 +95,13 @@ namespace TerapiaExam.Areas.Admin.Controllers
             {
                 Name = existed.Name,
                 Surname = existed.Surname,
-                Job = existed.Job,
+                PositionId = existed.PositionId,
                 ImageUrl = existed.ImageUrl,
                 FacebookLink = existed.FacebookLink,
                 InstagramLink = existed.InstagramLink,
                 LinkedinLink = existed.LinkedinLink,
-                TwitterLink = existed.TwitterLink
+                TwitterLink = existed.TwitterLink,
+                Positions = await _context.Positions.ToListAsync()
             };
             return View(vm);
         }
@@ -95,16 +112,28 @@ namespace TerapiaExam.Areas.Admin.Controllers
             var existed = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
             if (existed is null) return NotFound();
             employeeVM.ImageUrl = existed.ImageUrl;
-            if (!ModelState.IsValid) return View(employeeVM);
+            if (!ModelState.IsValid)
+            {
+                employeeVM.Positions = await _context.Positions.ToListAsync();
+                return View(employeeVM);
+            }
+            if(!await _context.Positions.AnyAsync(p => p.Id == employeeVM.PositionId))
+            {
+                employeeVM.Positions = await _context.Positions.ToListAsync();
+                ModelState.AddModelError("PositionId", "There is no such position");
+                return View(employeeVM);
+            }
             if (employeeVM.Photo is not null)
             {
                 if (!employeeVM.Photo.ValidateType())
                 {
+                    employeeVM.Positions = await _context.Positions.ToListAsync();
                     ModelState.AddModelError("Photo", "Incorrect file type");
                     return View(employeeVM);
                 }
                 if (!employeeVM.Photo.ValidateSize())
                 {
+                    employeeVM.Positions = await _context.Positions.ToListAsync();
                     ModelState.AddModelError("Photo", "Incorrect file size");
                     return View(employeeVM);
                 }
@@ -113,7 +142,7 @@ namespace TerapiaExam.Areas.Admin.Controllers
             }
             existed.Name = employeeVM.Name;
             existed.Surname = employeeVM.Surname;
-            existed.Job = employeeVM.Job;
+            existed.PositionId = employeeVM.PositionId;
             existed.FacebookLink = employeeVM.FacebookLink;
             existed.InstagramLink = employeeVM.InstagramLink;
             existed.LinkedinLink = employeeVM.LinkedinLink;
@@ -125,11 +154,11 @@ namespace TerapiaExam.Areas.Admin.Controllers
         public async Task<IActionResult> Details(int id)
         {
             if (id <= 0) return BadRequest();
-            var existed = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
+            var existed = await _context.Employees.Include(e=>e.Position).FirstOrDefaultAsync(e => e.Id == id);
             if (existed is null) return NotFound();
             return View(existed);
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest();

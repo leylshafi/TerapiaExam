@@ -18,7 +18,7 @@ namespace TerapiaExam.Controllers
         {
             HomeVM vm = new()
             {
-                Employees = await _context.Employees.ToListAsync()
+                Employees = await _context.Employees.Include(e=>e.Position).ToListAsync()
             };
             return View(vm);
         }

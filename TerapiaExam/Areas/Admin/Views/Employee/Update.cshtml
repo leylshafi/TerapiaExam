@@ -22,9 +22,11 @@
                     <span class="text-danger" asp-validation-for="Surname"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Job">Job</label>
-                    <input asp-for="Job" class="form-control" placeholder="Job">
-                    <span class="text-danger" asp-validation-for="Job"></span>
+                    <label asp-for="PositionId">Position</label>
+                    <select class="form-control" asp-for="PositionId" asp-items="new SelectList(Model.Positions,nameof(Position.Id),nameof(Position.Name))">
+                        <option selected disabled>Choose position</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="PositionId"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="FacebookLink">FacebookLink</label>
