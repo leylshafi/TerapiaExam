@@ -42,10 +42,10 @@ namespace TerapiaExam.Data
         public async Task CreateAdmin()
         {
             AppUser admin = new() { 
-                Name = "admin",
-                Surname = "admin",
-                Email = "admin@gmail.com",
-                UserName = "admin"
+                Name = _config["Admin:Name"],
+                Surname = _config["Admin:Surname"],
+                Email = _config["Admin:Email"],
+                UserName = _config["Admin:Username"]
             };
             await _userManager.CreateAsync(admin, _config["Admin:Password"]);
             await _userManager.AddToRoleAsync(admin, UserRole.Admin.ToString());

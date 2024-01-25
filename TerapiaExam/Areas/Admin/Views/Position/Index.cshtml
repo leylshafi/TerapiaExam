@@ -1,0 +1,43 @@
+﻿@model List<Position>
+@{
+    int count = 0;
+}
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <a class="btn btn-secondary" asp-action="Create">Create</a>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Employee count</th>
+                            <th>Settings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Position position in Model)
+                        {
+                            <tr>
+                                <td>@(++count)</td>
+                                <td>@position.Name</td>
+                                <td>@position.Employees.Count </td>
+                                <td>
+                                    <a class="btn btn-success" asp-action="Update" asp-route-id="@position.Id">Update</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@position.Id">Delete</a>
+                                    }
+                                    <a class="btn btn-warning" asp-action="Details" asp-route-id="@position.Id">Details</a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+    </div>
+</div>
