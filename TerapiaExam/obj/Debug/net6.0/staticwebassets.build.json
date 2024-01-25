@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "0q4e2/0kKmop0xHuZinaU0Y+fPVyxDjMzJUYbcJhwUo=",
+  "Hash": "KZZtzuKzbmCZTMD3xTbCql+4p4qAW3lVC3kJ5mOSUn8=",
   "Source": "TerapiaExam",
   "BasePath": "_content/TerapiaExam",
   "Mode": "Default",
@@ -1239,23 +1239,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\img\\2b3dd6aa-c10b-4b07-a363-b9676953547a.jpg"
-    },
-    {
-      "Identity": "C:\\Users\\CA.R215.15\\source\\repos\\TerapiaExam\\TerapiaExam\\wwwroot\\assets\\img\\30e66bda-241b-406d-aafd-4b64cb4c25fc.jpg",
-      "SourceId": "TerapiaExam",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CA.R215.15\\source\\repos\\TerapiaExam\\TerapiaExam\\wwwroot\\",
-      "BasePath": "_content/TerapiaExam",
-      "RelativePath": "assets/img/30e66bda-241b-406d-aafd-4b64cb4c25fc.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\assets\\img\\30e66bda-241b-406d-aafd-4b64cb4c25fc.jpg"
     },
     {
       "Identity": "C:\\Users\\CA.R215.15\\source\\repos\\TerapiaExam\\TerapiaExam\\wwwroot\\assets\\img\\a17badc7-1907-4002-973e-a9503947fdfc.jpg",

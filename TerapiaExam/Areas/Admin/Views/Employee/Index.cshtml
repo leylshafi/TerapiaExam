@@ -29,7 +29,10 @@
                                 <td>@employee.Job </td>
                                 <td>
                                     <a class="btn btn-success" asp-action="Update" asp-route-id="@employee.Id">Update</a>
-                                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@employee.Id">Delete</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@employee.Id">Delete</a>
+                                    }
                                     <a class="btn btn-warning" asp-action="Details" asp-route-id="@employee.Id">Details</a>
                                 </td>
                             </tr>

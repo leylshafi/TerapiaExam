@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TerapiaExam.Data;
 using TerapiaExam.Models;
+using TerapiaExam.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.ConfigureApplicationCookie(c =>
 });
 
 builder.Services.AddScoped<AppDbContextInitializer>();
+builder.Services.AddScoped<LayoutService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
