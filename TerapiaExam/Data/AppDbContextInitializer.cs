@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TerapiaExam.Enumerations;
 using TerapiaExam.Models;
 
 namespace TerapiaExam.Data
@@ -25,13 +26,17 @@ namespace TerapiaExam.Data
 
         public async Task CreateRole()
         {
-            if(!await _roleManager.RoleExistsAsync("Admin"))
+            foreach (UserRole role in Enum.GetValues(typeof(UserRole)))
             {
-                await _roleManager.CreateAsync(new IdentityRole()
+                if (!await _roleManager.RoleExistsAsync(role.ToString()))
                 {
-                    Name = "Admin"
-                });
+                    await _roleManager.CreateAsync(new IdentityRole()
+                    {
+                        Name = role.ToString()
+                    });
+                }
             }
+           
         }
 
         public async Task CreateAdmin()
@@ -43,7 +48,7 @@ namespace TerapiaExam.Data
                 UserName = "admin"
             };
             await _userManager.CreateAsync(admin, _config["Admin:Password"]);
-            await _userManager.AddToRoleAsync(admin, "Admin");
+            await _userManager.AddToRoleAsync(admin, UserRole.Admin.ToString());
 
         }
     }

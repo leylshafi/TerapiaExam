@@ -62,7 +62,7 @@ namespace TerapiaExam.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>Login(LoginVM loginVM)
+        public async Task<IActionResult>Login(LoginVM loginVM, string? returnUrl)
         {
             if(!ModelState.IsValid) return View();
             AppUser user =await _userManager.FindByEmailAsync(loginVM.UserNameOrEmail);
@@ -83,7 +83,8 @@ namespace TerapiaExam.Areas.Admin.Controllers
                 return View();
             }
 
-            return RedirectToAction("Index", "Home", new { area = "" });
+            return (returnUrl is null)? RedirectToAction("Index", "Home", new { area = "" }):
+               RedirectToAction("Index", "Home", new { area = "Admin" });
         }
 
         public async Task<IActionResult> Logout()

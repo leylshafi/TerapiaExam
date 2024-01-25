@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TerapiaExam.Areas.Admin.ViewModels;
 using TerapiaExam.Data;
+using TerapiaExam.Enumerations;
 using TerapiaExam.Models;
 
 namespace TerapiaExam.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class SettingController : Controller
     {
         private readonly AppDbContext _context;
@@ -36,6 +39,7 @@ namespace TerapiaExam.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult>Update(int id, UpdateSettingVM settingVM)
         {
             if (id <= 0) return BadRequest();

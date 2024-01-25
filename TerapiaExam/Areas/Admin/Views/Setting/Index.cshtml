@@ -12,7 +12,10 @@
                             <th>No</th>
                             <th>Key</th>
                             <th>Value</th>
-                            <th>Settings</th>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <th>Settings</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -22,16 +25,21 @@
                                 <td>@(++count)</td>
                                 <td>@setting.Key</td>
                                 <td>@setting.Value </td>
-                                <td>
-                                    <a class="btn btn-success" asp-action="Update" asp-route-id="@setting.Id">Update</a>
-                                </td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <td>
+
+                                        <a class="btn btn-success" asp-action="Update" asp-route-id="@setting.Id">Update</a>
+
+                                    </td>
+                                }
                             </tr>
                         }
 
                     </tbody>
                 </table>
             </div>
-           
+
         </div>
     </div>
 </div>
